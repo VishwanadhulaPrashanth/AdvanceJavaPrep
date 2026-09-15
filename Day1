@@ -1,0 +1,198 @@
+Programs:
+---------------------
+
+1)
+package com.tap;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class Program1 {
+
+	
+	
+	public static void main(String[] args) {
+		
+		String url="jdbc:mysql://localhost:3306/jdbcclass";
+		String uname="root";
+		String upass="root";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			
+			System.out.println(con);
+		} catch (ClassNotFoundException e) {
+			
+			e.printStackTrace();
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+
+	}
+
+}
+
+
+2)
+package com.tap.program2;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+//Retriving data
+public class Program2 {
+
+	public static void main(String[] args) {
+		
+		String url="jdbc:mysql://localhost:3306/jdbcclass";
+		String uname="root";
+		String upass="root";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			
+			Statement stmt = con.createStatement();
+			
+			ResultSet res = stmt.executeQuery("SELECT * FROM EMPLOYEE");
+			
+			while(res.next())
+			{
+				System.out.println(res.getInt("id")+","+res.getString("name")+","+res.getString("email")+","+res.getString("dept")+","+res.getInt("salary"));
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+}
+3)
+package insert_program;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+//INSERT DATA
+public class Demo1 {
+	
+	//"jdbc:mysql://localhost:3306/jdbcclass"
+	
+	
+
+	public static void main(String[] args) {
+		
+		String query1="INSERT INTO EMPLOYEE (id,name,email,dept,salary)VALUES(6,'emily','emily@gmail.com','Sales',20000)";
+		
+		String url = "jdbc:mysql://localhost:3306/jdbcclass";
+		String uname="root";
+		String upass="root";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			Statement stmt = con.createStatement();
+			int row = stmt.executeUpdate(query1);
+			
+			System.out.println(row);
+		} catch (ClassNotFoundException e) {
+			
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}
+4)
+package delete_program;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+//DELETE DATA
+public class Demo2 {
+	
+	
+
+	public static void main(String[] args) {
+		String url = "jdbc:mysql://localhost:3306/jdbcclass";
+		String uname="root";
+		String upass="root";
+		
+		String query="DELETE FROM EMPLOYEE WHERE id=6";
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			
+			Statement stmt = con.createStatement();
+			
+			int row = stmt.executeUpdate(query);
+			
+			System.out.println(row);
+		} catch (ClassNotFoundException e) {
+			
+			e.printStackTrace();
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+}
+
+5)
+package update_program;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+//UPDATE DATA
+public class Demo3 {
+	
+	//"jdbc:mysql://localhost:3306/jdbcclass"
+	
+	
+
+	public static void main(String[] args) {
+		
+		String query1="UPDATE EMPLOYEE SET SALARY = SALARY+3000 WHERE id=1";
+		
+		String url = "jdbc:mysql://localhost:3306/jdbcclass";
+		String uname="root";
+		String upass="root";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			Statement stmt = con.createStatement();
+			int row = stmt.executeUpdate(query1);
+			
+			System.out.println(row);
+		} catch (ClassNotFoundException e) {
+			
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}
+----------------------------------------------------------------------------------------------------------------
