@@ -1,0 +1,157 @@
+1) //prepareStatement()
+package retriving_one_data;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class Demo4 {
+	private static final Scanner sc = new Scanner(System.in);
+	
+	public static void main(String[] args) {
+		String url ="jdbc:mysql://localhost:3306/jdbcclass";
+		String uname="root";
+		String upass="root";
+		
+		String query="SELECT * FROM EMPLOYEE WHERE DEPT=?";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			PreparedStatement pstmt = con.prepareStatement(query);
+			
+			System.out.println("Enter Department : ");
+			pstmt.setString(1, sc.nextLine());
+			ResultSet res = pstmt.executeQuery();
+			
+			while(res.next())
+			{
+				System.out.println(res.getInt("id")+","+res.getString("name")+","+res.getString("email")+","+res.getString("dept")+","+res.getInt("salary"));
+				
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+}
+2)package update_sal_from_user;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+//Updating salary and incrementing it Based On User Input Dept,Sal
+public class Demo5 {
+
+	private static final Scanner sc = new Scanner(System.in);
+	
+	public static void main(String[] args) {
+		String url ="jdbc:mysql://localhost:3306/jdbcclass";
+		String uname="root";
+		String upass="root";
+		
+		String query="UPDATE EMPLOYEE SET SALARY=SALARY+? WHERE DEPT=?";
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			
+			PreparedStatement pstmt = con.prepareStatement(query);
+			
+			System.out.println("Enter Salary To Incrment : ");
+			Integer inc = Integer.parseInt(sc.nextLine());
+			
+			System.out.println("Enter Department : ");
+			String department = (sc.nextLine());
+			
+			pstmt.setInt(1, inc);
+			pstmt.setString(2, department);
+			
+			int row = pstmt.executeUpdate();
+			
+			System.out.println(row);
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+}
+
+3)package insert_all_cols_from_user;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class Demo6 {
+
+	private static final Scanner sc = new Scanner(System.in);
+	
+	public static void main(String[] args) {
+
+		String url ="jdbc:mysql://localhost:3306/jdbcclass";
+		String uname="root";
+		String upass="root";
+		
+		String query = "INSERT INTO EMPLOYEE (id,name,email,dept,salary) VALUES (?,?,?,?,?)";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			PreparedStatement pstmt = con.prepareStatement(query);
+			
+			System.out.println("Enter Id : ");
+			Integer empId = Integer.parseInt(sc.nextLine());
+			
+			System.out.println("Enter Name : ");
+			String empName = (sc.nextLine());
+			
+			System.out.println("Enter Email : ");
+			String empMail = (sc.nextLine());
+			
+			System.out.println("Enter Department : ");
+			String empDepartment = (sc.nextLine());
+			
+			System.out.println("Enter Salary : ");
+			Integer empSal = Integer.parseInt(sc.nextLine());
+			
+			pstmt.setInt(1, empId);
+			pstmt.setString(2, empName);
+			pstmt.setString(3, empMail);
+			pstmt.setString(4, empDepartment);
+			pstmt.setInt(5, empSal);
+			
+			int row = pstmt.executeUpdate();
+			
+			System.out.println(row);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+}
+
