@@ -1,0 +1,90 @@
+//Code for Transaction Between Two Users By ACID Properties
+
+package transaction_management_acid_account_bal_transfer;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class Demo10 {
+	
+	
+	private static final Scanner sc = new Scanner(System.in);
+	private static final String url = "jdbc:mysql://localhost:3306/jdbcclass";
+	private static final String uname="root";
+	private static final String upass="root";
+	private static String sql = "UPDATE EMPLOYEE SET SALARY = SALARY+? WHERE NAME = ?";
+	static Connection con=null;
+	static String choice = null;
+	public static void main(String[] args) {
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection(url,uname,upass);
+			
+			
+			con.setAutoCommit(false);
+			transaction();
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	private static void transaction() throws SQLException {
+		
+		
+		System.out.println("Enter Sender Name : ");
+		String sender = sc.nextLine();
+		
+		System.out.println("Enter Receiver Name : ");
+		String rxer = sc.nextLine();
+		
+		System.out.println("Enter Amount : ");
+		Integer amount =Integer.parseInt( sc.nextLine());
+		
+		int x = updateBal(sender,-amount);
+		int y = updateBal(rxer, amount);
+		
+		if(isConfirm(x,y))
+		{
+			System.out.println("Transaction Successfull");
+			con.commit();
+			
+		}
+		else
+		{
+			System.out.println("Transaction Failed");
+			con.rollback();
+		}
+//		System.out.println(x +" : "+ y);
+		
+	}
+
+	private static boolean isConfirm(int x, int y) {
+		
+		System.out.println("Do You Want To Confirm Transaction (yes/no) ? ");
+		 choice = sc.nextLine();	 
+		return choice.equalsIgnoreCase("yes")&&(x==1)&&(y==1);
+	}
+
+	private static int updateBal(String user, Integer amount) throws SQLException {
+		
+		PreparedStatement stmt = con.prepareStatement(sql);
+		stmt.setInt(1, amount);
+		stmt.setString(2, user);
+		
+		
+		int row = stmt.executeUpdate();
+		
+		return row;
+	}
+
+}
