@@ -1,0 +1,102 @@
+package stored_procedure.count_employees_of_specific_dept;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Scanner;
+
+//Count Number of Employees of a specific Department 
+
+public class Demo11 {
+
+	private static final Scanner sc = new Scanner(System.in);
+	private static final String url = "jdbc:mysql://localhost:3306/jdbcclass";
+	private static final String uname="root";
+	private static final String upass="root";
+ static Connection con = null;
+	
+	public static void main(String[] args) {
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			
+			 con = DriverManager.getConnection(url,uname,upass);
+			 
+			 CallableStatement cstmt = con.prepareCall("{call employee_count(?,?)}");
+			 
+			 System.out.println("Enter Employee Department : ");
+			 cstmt.setString(1, sc.nextLine());
+			cstmt.registerOutParameter(2, Types.INTEGER);
+			cstmt.execute();
+			int row = cstmt.getInt(2);
+			
+			System.out.println(row);
+			 
+		} catch (ClassNotFoundException e) {
+			
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}
+--------------------------------------------------------------------------
+
+package stored_procedure.count_employees_of_specific_dept;
+
+import java.sql.CallableStatement;
+
+//Count the Number of Employees Having Salary Greater Than Specifc salary
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Scanner;
+
+public class Demo12 {
+	
+	private static final Scanner sc = new Scanner(System.in);
+	private static final String url = "jdbc:mysql://localhost:3306/jdbcclass";
+	private static final String uname="root";
+	private static final String upass="root";
+ static Connection con = null;
+
+	public static void main(String[] args) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			
+			CallableStatement cstmt = con.prepareCall("{call employee_sal_count(?,?)}");
+			
+			System.out.println("Enter Salary : ");
+			Integer sal = Integer.parseInt(sc.nextLine());
+			cstmt.setInt(1, sal);
+			cstmt.registerOutParameter(2, Types.INTEGER);
+			cstmt.execute();
+			int row = cstmt.getInt(2);
+			
+			System.out.println(row);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}
+
+------------------------------------------------------------
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `employee_count`(IN d VARCHAR(10), OUT e_count INT)
+BEGIN
+SELECT COUNT(*) INTO e_count FROM `EMPLOYEE` WHERE `dept`=d;
+END
+
+-------------------------------------------------------------
