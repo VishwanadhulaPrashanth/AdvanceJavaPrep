@@ -100,3 +100,54 @@ SELECT COUNT(*) INTO e_count FROM `EMPLOYEE` WHERE `dept`=d;
 END
 
 -------------------------------------------------------------
+
+package stored_procedure.count_employees_of_specific_dept;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+//Retrieve All Employees Having Salary Lesser Than Specific Amount
+public class Demo13 {
+
+	private static final Scanner sc = new Scanner(System.in);
+	private static final String url = "jdbc:mysql://localhost:3306/jdbcclass";
+	private static final String uname="root";
+	private static final String upass="root";
+	
+	public static void main(String[] args) {
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			
+			CallableStatement cstmt = con.prepareCall("{call employee_salary_less(?)}");
+			
+			System.out.println("Enter salary : ");
+			Integer sal = Integer.parseInt(sc.nextLine());
+			cstmt.setInt(1, sal);
+			
+			cstmt.execute();
+			ResultSet rs = cstmt.getResultSet();
+			while(rs.next())
+			{
+				System.out.printf("%-15d %-15s %-10s %5s %-15d",rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5));
+				System.out.println("\n");
+			}
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+}
+
+
