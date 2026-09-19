@@ -1,0 +1,367 @@
+package com.tap.model;
+
+import java.util.Date;
+
+public class User {
+	private Integer userId;
+	private String userName;
+	private String userPassword;
+	private String userEmail;
+	private String userAddress;
+	private String userRole;
+	private Date createDate;
+	private Date lastLoginDate;
+	
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public User(Integer userId, String userName, String userPassword, String userEmail, String userAddress,
+			String userRole, Date createDate, Date lastLoginDate) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+		this.userPassword = userPassword;
+		this.userEmail = userEmail;
+		this.userAddress = userAddress;
+		this.userRole = userRole;
+		this.createDate = createDate;
+		this.lastLoginDate = lastLoginDate;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+//	public void setUserId(Integer userId) {
+//		this.userId = userId;
+//	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserPassword() {
+		return userPassword;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+
+	public String getUserAddress() {
+		return userAddress;
+	}
+
+	public void setUserAddress(String userAddress) {
+		this.userAddress = userAddress;
+	}
+
+	public String getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", userName=" + userName + ", userPassword=" + userPassword + ", userEmail="
+				+ userEmail + ", userAddress=" + userAddress + ", userRole=" + userRole + ", createDate=" + createDate
+				+ ", lastLoginDate=" + lastLoginDate + "]";
+	}
+	
+	-----------------------------------------
+
+package com.tap.dao;
+
+import java.util.List;
+
+import com.tap.model.User;
+
+public interface UserDAO {
+	
+	public User getUser(int id);
+	public List<User> getAllUser();
+	public void updateUser(User user);
+	public void deleteUser(int id);
+	public void addUser(User user);
+
+}
+
+-----------------------------------------
+
+package com.tap.daoimpl;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.jar.Attributes.Name;
+
+import com.tap.dao.UserDAO;
+import com.tap.model.User;
+
+/*userId, userName, password, email, address, role, createDate, lastLoginDate*/
+public class UserDAOImpl implements UserDAO{
+
+	private static final String INSERT_QUERY="INSERT INTO `user` (`userId`,`userName`,`password`,`email`,`address`,`role`) VALUES (?,?,?,?,?,?)";
+	
+	private static final String SELECT_QUERY="SELECT * FROM `user` WHERE userId=?";
+	
+	private static final String SELECT_ALL_QUERY="SELECT * FROM `user`";
+	
+	private static final String UPDATE_QUERY="UPDATE `user` SET`userName`=?,`password`=?,`email`=?,`address`=?,`role`=?  WHERE `userId`=?";
+	
+	private static final String DELETE_QUERY="DELETE FROM `user` WHERE `userId`=?";
+	
+	static Connection con = null;
+	public UserDAOImpl() {
+		String url = "jdbc:mysql://localhost:3306/tapfood";
+		String uname="root";
+		String upass="root";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection(url,uname,upass);
+		} catch (ClassNotFoundException | SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	@Override
+	public User getUser(int id) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			 pstmt = con.prepareStatement(SELECT_QUERY);
+			 pstmt.setInt(1,id);
+			  rs = pstmt.executeQuery();
+			 
+			 if(rs.next())
+			 {
+				 User printUserTrack = printUserTrack(rs);
+				return printUserTrack;
+			 }
+			 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private User printUserTrack(ResultSet rs) {
+		
+		User user=null;
+		/*userId, userName, password, email, address, role, createDate, lastLoginDate*/
+		
+		try {
+			Integer userId = rs.getInt(1);
+			String userName = rs.getString(2);
+			String password = rs.getString(3);
+			String email = rs.getString(4);
+			String address = rs.getString(5);
+			String role = rs.getString(6);
+			Date createDate = rs.getDate(7);
+			Date lastLoginDate = rs.getDate(8);
+			
+			user = new User(userId,userName,password, email, address, role, createDate, lastLoginDate);
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user;
+		
+	}
+
+
+
+	@Override
+	public List<User> getAllUser() {
+		/*userId, userName, password, email, address, role, createDate, lastLoginDate*/
+		
+		User user=null;
+		ArrayList<User> ListOfUsers = new ArrayList<User>();
+		
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet res = stmt.executeQuery(SELECT_ALL_QUERY);
+			
+			while(res.next())
+			{
+				Integer userId = res.getInt("userId");
+				String userName = res.getString("userName");
+				String password = res.getString("password");
+				String email = res.getString("email");
+				String address = res.getString("address");
+				String role = res.getString("role");
+				Date createDate = res.getDate("createDate");
+				Date lastLoginDate = res.getDate("lastLoginDate");
+				
+				
+				 user = new User(userId,userName,password, email, address, role, createDate, lastLoginDate);
+				
+				 ListOfUsers.add(user);
+				
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return ListOfUsers;
+	}
+
+	@Override
+	public void updateUser(User user) {
+//		private static final String UPDATE_QUERY="UPDATE `user` SET`userName`=?,`password`=?,`email`=?,`address`=?,`role`=?  WHERE `userId`=?";
+
+		PreparedStatement pstmt=null;
+		try {
+			pstmt = con.prepareStatement(UPDATE_QUERY);
+			pstmt.setString(1, user.getUserName());
+			pstmt.setString(2, user.getUserPassword());
+			pstmt.setString(3, user.getUserEmail());
+			pstmt.setString(4, user.getUserAddress());
+			pstmt.setString(5, user.getUserRole());
+			pstmt.setInt(6, user.getUserId());
+			
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void deleteUser(int id) {
+//		private static final String DELETE_QUERY="DELETE FROM `user` WHERE `userId`=?";
+
+		PreparedStatement pstmt=null;
+		
+		try {
+			pstmt = con.prepareStatement(DELETE_QUERY);
+			pstmt.setInt(1, id);
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void addUser(User user) {
+		
+		 PreparedStatement pstmt=null;
+		try {
+			 pstmt = con.prepareStatement(INSERT_QUERY);
+			 pstmt.setInt(1, user.getUserId());
+			 pstmt.setString(2, user.getUserName());
+			 pstmt.setString(3, user.getUserPassword());
+			 pstmt.setString(4, user.getUserEmail());
+			 pstmt.setString(5, user.getUserAddress());
+			 pstmt.setString(6, user.getUserRole());
+			 
+			 pstmt.executeUpdate();
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+
+}
+
+
+
+	
+}
+
+-----------------------------------------
+
+package com.tap.application;
+
+import java.util.List;
+
+import com.tap.dao.UserDAO;
+import com.tap.daoimpl.UserDAOImpl;
+import com.tap.model.User;
+
+public class Main {
+
+	public static void main(String[] args) {
+		UserDAO userDao = new UserDAOImpl();
+		
+		User scott = new User(102,
+                "Scott",
+                "Scottnew123",
+                "Scott@gmail.com",
+                "Italy",
+                "Customer",
+                null,
+                null);
+//		userDao.addUser(prashanth);
+//		System.out.println("User Added Successfully");
+		
+	
+//		System.out.println(userDao.getUser(101));
+		
+		
+//		List<User> allUser = userDao.getAllUser();
+//		
+//		for(User user : allUser)
+//		{
+//			System.out.println(user);
+//		}
+		
+		
+//		userDao.updateUser(scott);
+		
+		
+//		userDao.deleteUser(102);
+		
+	}
+
+}
+-----------------------------------------------------------
