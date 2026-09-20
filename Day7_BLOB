@@ -56,3 +56,65 @@ public class Demo14 {
 
 
 }
+
+
+
+----------------------CLOB---------------------------------
+
+
+package com.clob;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class ClobDemo {
+	
+	private static final Scanner sc = new Scanner(System.in);
+	private static final String url = "jdbc:mysql://localhost:3306/studentdb";
+	private static final String uname="root";
+	private static final String upass="root";
+	private static final String pkg="com.mysql.cj.jdbc.Driver";
+	private static final String CLOB_QUERY="UPDATE `student` SET  `intro`=? WHERE `student_id`=?";
+	
+	public static void main(String[] args) {
+		try {
+			Class.forName(pkg);
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			
+			PreparedStatement pstmt = con.prepareStatement(CLOB_QUERY);
+			
+			FileReader fr = new FileReader("D:\\AdvanceJavaTAP\\BLOB_Project\\file.txt");
+			
+			System.out.println("Enter Id : ");
+			pstmt.setInt(2, Integer.parseInt(sc.nextLine()));
+			pstmt.setCharacterStream(1, fr);
+			
+			int row = pstmt.executeUpdate();
+			
+			if(row>0)
+			{
+				System.out.println("File Inserted Successfully");
+			}
+			else
+			{
+				System.out.println("File Not Inserted.");
+			}
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}
