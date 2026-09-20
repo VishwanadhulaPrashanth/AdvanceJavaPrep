@@ -1,0 +1,58 @@
+package com.blob;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class Demo14 {
+	
+	static String url = "jdbc:mysql://localhost:3306/studentdb";
+	static String uname = "root";
+	static String upass="root";
+	static String pkg = "com.mysql.cj.jdbc.Driver";
+	static String UPDATE_QUERY = "UPDATE `student` SET `dp`=? WHERE `student_id`=?";
+	private static final Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) {
+		try {
+			Class.forName(pkg);
+			Connection con = DriverManager.getConnection(url,uname,upass);
+			
+			PreparedStatement pstmt = con.prepareStatement(UPDATE_QUERY);
+			
+			FileInputStream fis = new FileInputStream("D:\\AdvanceJavaTAP\\BLOB_Project\\src\\images\\prashanth.png");
+			
+			System.out.println("Enter Id : ");
+			int id = Integer.parseInt(sc.nextLine());
+			
+			pstmt.setInt(2, id);
+			pstmt.setBinaryStream(1, fis);
+			
+			int row = pstmt.executeUpdate();
+			
+			if(row>0)
+			{
+				System.out.println("Image Inserted Successfully");
+			}
+			else
+			{
+				System.out.println("Image Not Inserted.");
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+
+
+}
