@@ -8,3 +8,75 @@
 <h1>Hi, welcome To JEE</h1>
 </body>
 </html>
+-------------------------------------------------------
+-------------------------------------------------------
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <display-name>JEE2</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.xhtml</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.xhtml</welcome-file>
+  </welcome-file-list>
+  
+  
+  <servlet-mapping>
+  
+  <servlet-name>calling1</servlet-name>
+  <url-pattern>/ServletCalling1</url-pattern>
+  
+  </servlet-mapping>
+  
+  <servlet>
+  
+  <servlet-name>calling1</servlet-name>
+  <servlet-class>com.tap.servlet.Servlet1</servlet-class>
+  
+  </servlet>
+</web-app>
+------------------
+package com.tap.servlet;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Servlet1 extends HttpServlet{
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		super.service(req, resp);
+		System.out.println("Servlet1");
+	}
+}
+
+
+-----------------------
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Welcome</title>
+</head>
+<body>
+<form action="ServletCalling1">
+<div>
+<label>UserName : </label>
+<input type="text" placeholder="Enter User Name">
+</div>
+<div>
+<input type="submit">
+</div>
+</form>
+</body>
+</html>
+
