@@ -59,7 +59,75 @@ public class Servlet extends HttpServlet{
 </form>
 </body>
 </html>
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Program 2: 
+package com.tap;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Servlet1 extends HttpServlet{
+	
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String uname = req.getParameter("username");
+		String upass = req.getParameter("password");
+		
+		PrintWriter pw = resp.getWriter();
+		pw.write("Hello "+uname+" Welcome To Home Page !!");
+	}
+
+}
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <display-name>LoginDemoProject</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.xhtml</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.xhtml</welcome-file>
+  </welcome-file-list>
+  
+  <servlet-mapping>
+  <servlet-name>caller</servlet-name>
+  <url-pattern>/callingServer</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+   <servlet-name>caller</servlet-name>
+   <servlet-class>com.tap.Servlet1</servlet-class>
+  </servlet>
+</web-app>
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="callingServer">
+
+USERNAME : 
+<input type="text" name="username">
+<br>
+PASSWORD : 
+<input type="password" name="password">
+<br>
+<input type="submit">
+</form>
+</body>
+</html>
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
