@@ -1,0 +1,142 @@
+package com.tap;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Servlet1 extends HttpServlet{
+	
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String xValue = req.getParameter("x");
+		String yValue = req.getParameter("y");
+		
+		int x = Integer.parseInt(xValue);
+		int y = Integer.parseInt(yValue);
+		
+		int sum = x+y;
+		
+		PrintWriter pw = resp.getWriter();
+		pw.println(sum);
+		
+		RequestDispatcher rd = req.getRequestDispatcher("CallingServlet2");
+		rd.include(req, resp);
+		
+		
+		
+		
+		
+	}
+
+}
+-------------------------------------------------------------------------------
+  package com.tap;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Servlet2 extends HttpServlet{
+	
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String xValue = req.getParameter("x");
+		String yValue = req.getParameter("y");
+		
+		int x = Integer.parseInt(xValue);
+		int y = Integer.parseInt(yValue);
+		
+		int prod = x*y;
+		
+		PrintWriter pw = resp.getWriter();
+		pw.print(prod);
+	}
+
+}
+-------------------------------------------------------------------------------
+  <?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <display-name>ServletChaining2</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.xhtml</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.xhtml</welcome-file>
+  </welcome-file-list>
+  
+  
+  <servlet-mapping>
+  
+  <servlet-name>calling1</servlet-name>
+  
+  <url-pattern>/ServletCalling1</url-pattern>
+  
+  </servlet-mapping>
+  
+  
+  <servlet>
+  
+  <servlet-name>calling1</servlet-name>
+  <servlet-class>com.tap.Servlet1</servlet-class>
+  
+  </servlet>
+  
+  
+  <!-- CallingServlet2 -->
+  
+  
+  <servlet-mapping>
+  
+  <servlet-name>calling2</servlet-name>
+  
+  <url-pattern>/CallingServlet2</url-pattern>
+  
+  </servlet-mapping>
+  
+  
+  <servlet>
+  
+  <servlet-name>calling2</servlet-name>
+  <servlet-class>com.tap.Servlet2</servlet-class>
+  
+  </servlet>
+</web-app>
+  -------------------------------------------------------------------------------
+  <!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<form action="ServletCalling1">
+
+<input type="number" name="x">
+<br>
+<input type="number" name="y">
+<br>
+<input type="submit">
+
+</form>
+</body>
+</html>
+
+  -------------------------------------------------------------------------------
+
+  
