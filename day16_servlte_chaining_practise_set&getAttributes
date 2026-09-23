@@ -138,5 +138,130 @@ public class Servlet2 extends HttpServlet{
 </html>
 
   -------------------------------------------------------------------------------
+ BY SETATTRIBUTE AND GETATTRIBUTE :
+ -------------------------------------------------------------------------------
 
+package com.tap;
+
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Servlet1 extends HttpServlet{
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	
+		
+		String x = req.getParameter("x");
+		String y = req.getParameter("y");
+		
+		int xValue = Integer.parseInt(x);
+		int yValue = Integer.parseInt(y);
+		
+		int sum = xValue+yValue;
+		
+		req.setAttribute("sumValue", sum);
+		
+		RequestDispatcher rd = req.getRequestDispatcher("callingServlet2");
+		rd.forward(req, resp);
+	}
+}
+ -------------------------------------------------------------------------------
+package com.tap;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Servlet2 extends HttpServlet{
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+
+		String x = req.getParameter("x");
+		String y = req.getParameter("y");
+		
+		int xValue = Integer.parseInt(x);
+		int yValue = Integer.parseInt(y);
+		
+		int prod = xValue*yValue;
+		
+		
+		int sum = (int)req.getAttribute("sumValue");
+		
+		PrintWriter pw = resp.getWriter();
+		pw.println("PROD : "+prod);
+		pw.println("SUM : "+sum);
+	}
+}
+
+ -------------------------------------------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <display-name>ServletChaining3_getAttribute_setAttribute_</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.xhtml</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.xhtml</welcome-file>
+  </welcome-file-list>
+  
+  
+  <servlet-mapping>
+  <servlet-name>calling1</servlet-name>
+  <url-pattern>/callingServlet1</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  <servlet-name>calling1</servlet-name>
+  <servlet-class>com.tap.Servlet1</servlet-class>
+  </servlet>
+  
+  
+  <!--callingServlet2  -->
+  
+  <servlet-mapping>
+  <servlet-name>calling2</servlet-name>
+  <url-pattern>/callingServlet2</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  <servlet-name>calling2</servlet-name>
+  <servlet-class>com.tap.Servlet2</servlet-class>
+  </servlet>
+</web-app>
+
+ -------------------------------------------------------------------------------
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="callingServlet1">
+x :
+<br>
+<input type="text" name="x">
+y :
+<input type="text" name="y">
+
+<input type="submit">
+</form>
+</body>
+</html>
   
