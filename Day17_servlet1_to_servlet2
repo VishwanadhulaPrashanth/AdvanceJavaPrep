@@ -1,0 +1,140 @@
+#Program 1:
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <display-name>practise</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.xhtml</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.xhtml</welcome-file>
+  </welcome-file-list>
+  
+  <servlet-mapping>
+    <servlet-name>caller1</servlet-name>
+    <url-pattern>/callingServlet1</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  <servlet-name>caller1</servlet-name>
+  <servlet-class>com.tap.Servlet1</servlet-class>
+  </servlet>
+  
+  
+   <servlet-mapping>
+    <servlet-name>caller2</servlet-name>
+    <url-pattern>/callingServlet2</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  <servlet-name>caller2</servlet-name>
+  <servlet-class>com.tap.Servlet2</servlet-class>
+  </servlet>
+  
+</web-app>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<form action="callingServlet1" method="get">
+
+USERNAME : 
+<input type="text" name="username">
+<br>
+PASSWORD : 
+
+<input type="password" name="password">
+<br>
+<input type="submit">
+
+</form>
+
+</body>
+</html>
+
+package com.tap;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.jasper.compiler.Node.ForwardAction;
+
+public class Servlet1 extends HttpServlet{
+
+	static int count=3;
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		resp.setContentType("text/html");
+		
+		String upass = req.getParameter("password");
+		
+		PrintWriter pw = resp.getWriter();
+		
+		RequestDispatcher rd = req.getRequestDispatcher("index.html");
+		
+		if("vpc123".equals(upass))
+		{
+			pw.print("WELCOME LOGIN SUCCESSFULL");
+		}
+		else if(count>0)
+		{
+			
+			rd.include(req, resp);
+			pw.print("INVALID LOGIN "+count+" ATTEMPTS LEFT");
+			count--;
+		}
+		else if(count==0)
+		{
+			RequestDispatcher rd2 = req.getRequestDispatcher("callingServlet2");
+			rd2.forward(req, resp);
+		}
+	}
+
+}
+package com.tap;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Servlet2 extends HttpServlet{
+	
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		PrintWriter pw = resp.getWriter();
+		pw.print("INVALID PASSWORD ATTEMPTS OVER.CONTACT ADMIN");
+		
+	}
+
+}
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
